@@ -21,7 +21,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtRegister = (TextView)findViewById(R.id.txtRegister);
+        txtRegister = (TextView)findViewById(R.id.txtLoginRegister);
 
         txtRegister.setOnClickListener(new View.OnClickListener() {
             @Override
