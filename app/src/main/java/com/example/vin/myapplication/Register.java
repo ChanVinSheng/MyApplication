@@ -53,69 +53,68 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         final String username = txtusername.getText().toString().trim();
         final String password = txtpassword.getText().toString().trim();
 
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressBar.setVisibility(View.GONE);
-                            User user = new User(username,email,password);
-                            FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+        boolean fieldsOK = validate(new EditText[] { txtusername, txtemail, txtpassword,txtconfirmedPassword });
+        if(fieldsOK){
+            if(!isValidEmail(txtemail.getText().toString().trim())){
+                txtemail.setError("Invalid Email");
+                txtemail.setText("");
+                txtemail.requestFocus();
+            }
+            else if(!txtconfirmedPassword.getText().toString().trim().equals(txtpassword.getText().toString().trim())){
+
+                txtconfirmedPassword.setError("Password Not same");
+                txtconfirmedPassword.setText("");
+                txtconfirmedPassword.requestFocus();
+            }
+            else if(txtpassword.getText().toString().length() < 6){
+                txtpassword.setError("Minimum length of password should be 6 ");
+                txtpassword.setText("");
+                txtpassword.requestFocus();
+                txtconfirmedPassword.setText("");
+
+            }
+            else{
+                progressBar.setVisibility(View.VISIBLE);
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    progressBar.setVisibility(View.GONE);
+                                    User user = new User(username,email,password);
+                                    FirebaseDatabase.getInstance().getReference("Users")
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                    Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+                                }else{
+
+                                    if(task.getException() instanceof FirebaseAuthUserCollisionException){
+                                        Toast.makeText(Register.this, "This email already exist", Toast.LENGTH_LONG).show();
+                                    }else{
+                                        Toast.makeText(Register.this, "Register fail... please try again", Toast.LENGTH_LONG).show();
                                     }
                                 }
-                            });
-                            Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
-                        }else{
-
-                            if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                                Toast.makeText(Register.this, "This email already exist", Toast.LENGTH_LONG).show();
-                            }else{
-                                Toast.makeText(Register.this, "Register fail... please try again", Toast.LENGTH_LONG).show();
                             }
-                        }
-                    }
-                });
+                        });
+            }
+        }
+        else{
+            Toast.makeText(Register.this, "Text Box is empty", Toast.LENGTH_LONG).show();
+        }
+
+
     }
 
     public void onClick(View view){
         if(view == buttonRegister){
-
-            boolean fieldsOK = validate(new EditText[] { txtusername, txtemail, txtpassword,txtconfirmedPassword });
-            if(fieldsOK){
-                if(!isValidEmail(txtemail.getText().toString().trim())){
-                    txtemail.setError("Invalid Email");
-                    txtemail.setText("");
-                    txtemail.requestFocus();
-                }
-                else if(!txtconfirmedPassword.getText().toString().trim().equals(txtpassword.getText().toString().trim())){
-
-                    txtconfirmedPassword.setError("Password Not same");
-                    txtconfirmedPassword.setText("");
-                    txtconfirmedPassword.requestFocus();
-                }
-                else if(txtpassword.getText().toString().length() < 6){
-                   txtpassword.setError("Minimum length of password should be 6 ");
-                    txtpassword.setText("");
-                    txtpassword.requestFocus();
-                    txtconfirmedPassword.setText("");
-
-                }
-                else{
-                    registerUser();
-                }
-            }
-            else{
-                Toast.makeText(Register.this, "Text Box is empty", Toast.LENGTH_LONG).show();
-            }
-
-
+            registerUser();
         }
     }
 
