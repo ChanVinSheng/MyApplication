@@ -13,5 +13,6 @@
     <string name="login_log_in">log_in</string>
     <string name="login_new_here_click_here_to">new here click here to</string>
     <string name="login_register">register</string>
-
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

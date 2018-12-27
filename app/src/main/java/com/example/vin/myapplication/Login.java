@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,14 +23,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText txtEmail;
     private EditText txtPassword;
     private TextView txtRegister;
+    FirebaseUser firebaseUser;
     ProgressBar progressBar;
     FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         mAuth = FirebaseAuth.getInstance();
         txtEmail = findViewById(R.id.txtLoginEmail);
         txtPassword = findViewById(R.id.txtLoginPassword);
@@ -38,6 +41,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         progressBar = findViewById(R.id.LoginProgressBar);
         txtRegister.setOnClickListener(this);
         buttonLogin.setOnClickListener(this);
+
+        if(firebaseUser != null){
+            Intent intent = new Intent(Login.this , MainMenu.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void onClick(View view) {
