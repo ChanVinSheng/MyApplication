@@ -51,6 +51,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     public void onClick(View view) {
         if(view == txtRegister){
+            finish();
             startActivity(new Intent(Login.this, Register.class));
         }
         else if(view == buttonLogin){
@@ -70,6 +71,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
+                        finish();
                         Intent intent = new Intent(Login.this , MainMenu.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
