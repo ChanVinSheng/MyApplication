@@ -26,6 +26,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     FirebaseUser firebaseUser;
     ProgressBar progressBar;
     FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
 
 
     @Override
@@ -41,20 +42,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         progressBar = findViewById(R.id.LoginProgressBar);
         txtRegister.setOnClickListener(this);
         buttonLogin.setOnClickListener(this);
+        if (mAuth != null) {
 
-        if(firebaseUser != null){
-            Intent intent = new Intent(Login.this , MainMenu.class);
+            Intent intent = new Intent(Login.this, MainMenu.class);
             startActivity(intent);
-            finish();
         }
+
+
     }
 
     public void onClick(View view) {
-        if(view == txtRegister){
-            finish();
+        if (view == txtRegister) {
             startActivity(new Intent(Login.this, Register.class));
-        }
-        else if(view == buttonLogin){
+        } else if (view == buttonLogin) {
             userLogin();
         }
 
@@ -67,33 +67,32 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         progressBar.setVisibility(View.VISIBLE);
         boolean fieldsOK = validate(new EditText[]{txtEmail, txtPassword});
         if (fieldsOK) {
-            mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         finish();
-                        Intent intent = new Intent(Login.this , MainMenu.class);
+                        Intent intent = new Intent(Login.this, MainMenu.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                    }else{
+                    } else {
                         Toast.makeText(Login.this, "Email or Password is wrong", Toast.LENGTH_LONG).show();
                     }
                 }
             });
-        }
-        else{
+        } else {
             Toast.makeText(Login.this, "Text Box is empty", Toast.LENGTH_LONG).show();
         }
         progressBar.setVisibility(View.GONE);
     }
 
-        private boolean validate(EditText[] fields){
-            for(int i = 0; i < fields.length; i++){
-                EditText currentField = fields[i];
-                if(currentField.getText().toString().length() <= 0){
-                    return false;
-                }
+    private boolean validate(EditText[] fields) {
+        for (int i = 0; i < fields.length; i++) {
+            EditText currentField = fields[i];
+            if (currentField.getText().toString().length() <= 0) {
+                return false;
             }
-            return true;
         }
+        return true;
+    }
 }

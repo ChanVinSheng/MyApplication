@@ -1,6 +1,7 @@
 package com.example.vin.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -89,6 +90,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                finish();
+                                                Intent intent = new Intent(Register.this , Login.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(intent);
                                                 Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
                                             }
                                         }

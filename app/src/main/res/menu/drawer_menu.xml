@@ -5,8 +5,25 @@
 
     //this click will stay
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_testing"
-                android:title="Testing"/>
+        <item
+            android:id="@+id/nav_homepage"
+            android:icon="@drawable/ic_home"
+            android:title="Home Page" />
+
+        <item
+            android:id="@+id/nav_annoucement"
+            android:icon="@drawable/ic_annoucement"
+            android:title="Announcement" />
+
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_report"
+            android:title="Report" />
+
+        <item
+            android:id="@+id/nav_places"
+            android:icon="@drawable/ic_place"
+            android:title="Places" />
 
     </group>
 
