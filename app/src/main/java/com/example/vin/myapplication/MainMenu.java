@@ -17,13 +17,21 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainMenu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    FirebaseDatabase mFirebaseDatabase;
     FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
+    DatabaseReference myRef;
+    String userID;
 
     private DrawerLayout drawer;
-    FirebaseUser firebaseUser;
     TextView txtUsername;
     TextView txtEmail;
 
@@ -31,38 +39,60 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        //firebase
         mAuth = FirebaseAuth.getInstance();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        userID = firebaseUser.getUid();
+
+        //navigation
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         txtUsername = headerView.findViewById(R.id.HeaderUsername);
         txtEmail = headerView.findViewById(R.id.HeaderEmail);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
 
         if(firebaseUser == null){
             Intent intent = new Intent(this , Login.class);
             startActivity(intent);
             finish();
         }
-        loadUserInformation();
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                showData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
-    private void loadUserInformation(){
+    private void showData(DataSnapshot dataSnapshot) {
+        for(DataSnapshot ds:dataSnapshot.getChildren()){
+            User user = new User();
+            user.setEmail(ds.child(userID).getValue(User.class).getEmail());
+            user.setUsername(ds.child(userID).getValue(User.class).getUsername());
 
-        String email = firebaseUser.getEmail();
-        String username = firebaseUser.getDisplayName();
-        txtUsername.setText(username);
-        txtEmail.setText(email);
+            txtUsername.setText(user.getUsername());
+            txtEmail.setText(user.getEmail());
+        }
     }
+
 
     //change to fragment base on what the user click
     @Override

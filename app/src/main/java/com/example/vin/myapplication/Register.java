@@ -76,12 +76,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             else{
                 progressBar.setVisibility(View.VISIBLE);
                 mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    progressBar.setVisibility(View.GONE);
-                                    User user = new User(username,email,password);
+                                progressBar.setVisibility(View.GONE);
+                                if(task.isSuccessful()){
+                                    User user = new User(username , email, password);
+
                                     FirebaseDatabase.getInstance().getReference("Users")
                                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                             .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -92,9 +93,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                             }
                                         }
                                     });
-                                    Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
                                 }else{
-
                                     if(task.getException() instanceof FirebaseAuthUserCollisionException){
                                         Toast.makeText(Register.this, "This email already exist", Toast.LENGTH_LONG).show();
                                     }else{
@@ -106,7 +105,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             }
         }
         else{
-            Toast.makeText(Register.this, "Text Box is empty", Toast.LENGTH_LONG).show();
+                Toast.makeText(Register.this, "Text Box is empty", Toast.LENGTH_LONG).show();
         }
 
 
