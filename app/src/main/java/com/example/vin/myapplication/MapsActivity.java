@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.vin.myapplication.MAP.GetNearbyPlaces;
-import com.example.vin.myapplication.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.common.api.GoogleApiClient;
