@@ -2,6 +2,7 @@ package com.example.vin.myapplication;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +33,8 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
     DatabaseReference myRef;
     String userID;
 
+    private DatabaseReference mDatabaseUser_name,mDatabaseUser_email;
+
     private DrawerLayout drawer;
     TextView txtUsername;
     TextView txtEmail;
@@ -42,9 +46,11 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         //firebase
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference();
+        myRef = mFirebaseDatabase.getReference().child("Users");
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         userID = firebaseUser.getUid();
+
+
 
         //navigation
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -59,6 +65,37 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        mDatabaseUser_name = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("username");
+        mDatabaseUser_email = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("email");
+
+        mDatabaseUser_name.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                txtUsername.setText(dataSnapshot.getValue(String.class));
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseUser_email.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                txtEmail.setText(dataSnapshot.getValue(String.class));
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
 
         if(firebaseUser == null){
             Intent intent = new Intent(this , Login.class);
@@ -67,30 +104,23 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         }
 
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
-    private void showData(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds:dataSnapshot.getChildren()){
-            User user = new User();
-            user.setEmail(ds.child(userID).getValue(User.class).getEmail());
-            user.setUsername(ds.child(userID).getValue(User.class).getUsername());
 
-            txtUsername.setText(user.getUsername());
-            txtEmail.setText(user.getEmail());
-        }
-    }
+
+//    private void showData(DataSnapshot dataSnapshot) {
+//
+//        for(DataSnapshot ds:dataSnapshot.getChildren()){
+//
+//            Log.d("SHOWMETHEEEROR",test.toString());
+//            User user = new User();
+//            user.setEmail(ds.child(userID).getValue(User.class).getEmail());
+//            user.setUsername(ds.child(userID).getValue(User.class).getUsername());
+//
+//            txtUsername.setText(user.getUsername());
+//            txtEmail.setText(user.getEmail());
+//        }
+//    }
 
 
     //change to fragment base on what the user click
