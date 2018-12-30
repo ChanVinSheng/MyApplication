@@ -1,8 +1,10 @@
-package com.example.vin.myapplication;
+package com.example.vin.myapplication.MAP;
 
 
 import android.os.AsyncTask;
 
+import com.example.vin.myapplication.MAP.DataParser;
+import com.example.vin.myapplication.MAP.DownloadUrl;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;

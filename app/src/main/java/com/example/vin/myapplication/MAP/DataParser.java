@@ -1,4 +1,4 @@
-package com.example.vin.myapplication;
+package com.example.vin.myapplication.MAP;
 
 import org.json.JSONArray;
 import org.json.JSONException;
