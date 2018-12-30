@@ -7,9 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permisson.READ_GSERVICES" />﻿
-
-
+    <uses-permission android:name="com.google.android.providers.gsf.permisson.READ_GSERVICES" />
+    ﻿
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Login">
+        <activity android:name=".Login.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,12 +25,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Register"
-            android:parentActivityName=".Login"
-            tools:targetApi="jelly_bean"></activity>
+            android:name=".Login.Register"
+            android:parentActivityName=".Login.Login"
+            tools:targetApi="jelly_bean" />
         <activity
             android:name=".MainMenu"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -46,8 +45,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".FixLocation.FixMap">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <activity android:name=".Report.Report"></activity>
     </application>
 
 </manifest>

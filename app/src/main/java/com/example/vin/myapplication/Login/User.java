@@ -1,4 +1,4 @@
-package com.example.vin.myapplication;
+package com.example.vin.myapplication.Login;
 
 public class User {
     private String username , email , password;
