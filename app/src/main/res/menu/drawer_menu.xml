@@ -5,10 +5,6 @@
 
     //this click will stay
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_homepage"
-            android:icon="@drawable/ic_home"
-            android:title="Home Page" />
 
         <item
             android:id="@+id/nav_annoucement"
@@ -28,11 +24,14 @@
     </group>
 
     <item android:title="">
-        <menu>
+        <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/ic_about_us"
+            android:title="Logout" />
+
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_logout"
                 android:title="Logout" />
-        </menu>
     </item>
 </menu>
