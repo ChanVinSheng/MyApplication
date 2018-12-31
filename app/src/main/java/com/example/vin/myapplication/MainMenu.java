@@ -37,6 +37,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
     private DrawerLayout drawer;
     TextView txtUsername;
     TextView txtEmail;
+    NavigationView navigationView = findViewById(R.id.nav_view);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,6 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         txtUsername = headerView.findViewById(R.id.HeaderUsername);
@@ -135,6 +135,11 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
                 finish();
                 startActivity(new Intent(this,Login.class));
                 break;
+
+            case R.id.nav_report:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Report()).commit();
+                navigationView.setCheckedItem(R.id.nav_report);
+
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
