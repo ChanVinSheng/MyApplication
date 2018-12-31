@@ -7,9 +7,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,7 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Report extends AppCompatActivity implements
+public class Report extends Fragment implements
         FetchAddressTask.OnTaskCompleted {
 
     //date
@@ -70,17 +73,15 @@ public class Report extends AppCompatActivity implements
     private LocationCallback mLocationCallback;
 
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_report, container, false);
 
-        txtLocation = findViewById(R.id.txtLocation);
-        txtDescription = findViewById(R.id.txtDescription);
-        txtTitle = findViewById(R.id.txtReportTitle);
-        mLocationButton =(Button) findViewById(R.id.btnLocation);
-        mLocationTextView = (TextView) findViewById(R.id.txtLocation);
+        txtLocation = view.findViewById(R.id.txtLocation);
+        txtDescription = view.findViewById(R.id.txtDescription);
+        txtTitle = view.findViewById(R.id.txtReportTitle);
+        mLocationButton =(Button) view.findViewById(R.id.btnLocation);
+        mLocationTextView = (TextView) view.findViewById(R.id.txtLocation);
         //firedata base
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -118,8 +119,7 @@ public class Report extends AppCompatActivity implements
 
             }
         });
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(
-                this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
 
         if (savedInstanceState != null) {
@@ -144,18 +144,22 @@ public class Report extends AppCompatActivity implements
             public void onLocationResult(LocationResult locationResult) {
                 // If tracking is turned on, reverse geocode into an address
                 if (mTrackingLocation) {
-                    new FetchAddressTask(Report.this, Report.this)
-                            .execute(locationResult.getLastLocation());
+                    new FetchAddressTask(getActivity(), Report.this).execute(locationResult.getLastLocation());
                 }
             }
         };
+
+
+        return view;
     }
 
+
+
     private void startTrackingLocation() {
-        if (ActivityCompat.checkSelfPermission(this,
+        if (ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]
+            ActivityCompat.requestPermissions(getActivity(), new String[]
                             {Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION_PERMISSION);
         } else {
@@ -181,11 +185,11 @@ public class Report extends AppCompatActivity implements
             final String description = txtDescription.getText().toString().trim();
             //Check if title and description is empty
             if(TextUtils.isEmpty(title)){
-                Toast.makeText(this,"Please enter title",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Please enter title",Toast.LENGTH_LONG).show();
                 return;
             }
             if(TextUtils.isEmpty(description)){
-                Toast.makeText(this,"Please enter reports description",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Please enter reports description",Toast.LENGTH_LONG).show();
                 return;
             }
             chkID = String.valueOf(countId);
@@ -196,9 +200,8 @@ public class Report extends AppCompatActivity implements
                 @Override
                 public void onComplete(@NonNull Task<Void> task){
                     if(task.isSuccessful()){
-                        Toast.makeText(Report.this,"Send Successful",Toast.LENGTH_LONG).show();
-                        finish();
-                        Intent intent = new Intent(Report.this, MainMenu.class);
+                        Toast.makeText(getActivity(),"Send Successful",Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getActivity(), MainMenu.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
 
@@ -219,7 +222,7 @@ public class Report extends AppCompatActivity implements
 
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(TRACKING_LOCATION_KEY, mTrackingLocation);
         super.onSaveInstanceState(outState);
     }
@@ -236,9 +239,7 @@ public class Report extends AppCompatActivity implements
                         == PackageManager.PERMISSION_GRANTED) {
                     startTrackingLocation();
                 } else {
-                    Toast.makeText(this,
-                            R.string.location_permission_denied,
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.location_permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
