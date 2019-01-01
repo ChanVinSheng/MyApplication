@@ -77,6 +77,8 @@ public class Report extends Fragment implements
     String userID;
     private DatabaseReference mDatabaseUser_name;
 
+
+
     // Constants
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private static final String TRACKING_LOCATION_KEY = "tracking_location";

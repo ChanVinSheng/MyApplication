@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Smart City</string>
     <string name="title_activity_register">Register</string>
 
     <string name="register_enter_your_account_detail">Enter your account detail</string>
@@ -10,7 +10,7 @@
     <string name="register_register">Register</string>
     <string name="login_enter_your_email">Enter Your Email</string>
     <string name="login_enter_your_password">enter your password</string>
-    <string name="login_log_in">log_in</string>
+    <string name="login_log_in">log in</string>
     <string name="login_new_here_click_here_to">new here click here to</string>
     <string name="login_register">register</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

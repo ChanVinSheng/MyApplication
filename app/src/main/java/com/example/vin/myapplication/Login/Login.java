@@ -44,6 +44,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         progressBar = findViewById(R.id.LoginProgressBar);
         txtRegister.setOnClickListener(this);
         buttonLogin.setOnClickListener(this);
+
         if (firebaseUser  != null ) {
 
             Intent intent = new Intent(Login.this, MainMenu.class);
