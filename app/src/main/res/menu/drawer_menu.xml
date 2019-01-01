@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    //this click will stay
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_annoucement"
+            android:icon="@drawable/ic_annoucement"
+            android:title="Announcement" />
+
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_report"
+            android:title="Report" />
+
+        <item
+            android:id="@+id/nav_places"
+            android:icon="@drawable/ic_place"
+            android:title="Places" />
+
+    </group>
+
+    <item android:title="">
+        <item
+            android:id="@+id/nav_app_info"
+            android:icon="@drawable/ic_about_us"
+            android:title="App Info" />
+
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Logout" />
+    </item>
+</menu>

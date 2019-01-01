@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Smart City</string>
+    <string name="title_activity_register">Register</string>
+
+    <string name="register_enter_your_account_detail">Enter your account detail</string>
+    <string name="register_username">Username</string>
+    <string name="register_password">Password</string>
+    <string name="register_e_mail">E-mail</string>
+    <string name="register_comfirmed_password">Comfirmed Password</string>
+    <string name="register_register">Register</string>
+    <string name="login_enter_your_email">Enter Your Email</string>
+    <string name="login_enter_your_password">enter your password</string>
+    <string name="login_log_in">log in</string>
+    <string name="login_new_here_click_here_to">new here click here to</string>
+    <string name="login_register">register</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="loading">Loading…</string>
+    <string name="address_text">"Address: %1$s \n Timestamp: %2$tr"</string>
+    <string name="location_permission_denied">Location permissions denied,
+        please enable the permissions to use this app.
+    </string>
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid coordinates used</string>
+    <string name="no_address_found">No address found</string>
+    <string name="send">send</string>
+    <string name="info_app">This app is assignment for TARC 2018 Mobile Application RSD2G2 Create by ChanVinSheng , ChongKarShun,LowEeHui, LeekHonLun, and NgChueanChen</string>
+</resources>
+
