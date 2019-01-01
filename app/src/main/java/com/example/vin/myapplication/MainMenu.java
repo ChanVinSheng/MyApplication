@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.vin.myapplication.Login.Login;
 import com.example.vin.myapplication.Report.Report;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,8 +33,9 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
     FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference myRef;
     String userID;
+    ImageView imgUserProfile;
 
-    private DatabaseReference mDatabaseUser_name,mDatabaseUser_email;
+    private DatabaseReference mDatabaseUser_name,mDatabaseUser_email, mDatabaseUser_image;
 
     private DrawerLayout drawer;
     TextView txtUsername;
@@ -55,17 +58,19 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         txtUsername = headerView.findViewById(R.id.HeaderUsername);
         txtEmail = headerView.findViewById(R.id.HeaderEmail);
+        imgUserProfile = headerView.findViewById(R.id.HeaderImage);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         mDatabaseUser_name = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("username");
         mDatabaseUser_email = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("email");
+        mDatabaseUser_image = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("imageURL");
 
         mDatabaseUser_name.addValueEventListener(new ValueEventListener() {
             @Override
@@ -84,6 +89,21 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 txtEmail.setText(dataSnapshot.getValue(String.class));
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseUser_image.addValueEventListener(new ValueEventListener() {
+            FirebaseUser url = mAuth.getCurrentUser();
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Glide.with(navigationView).load(url.getPhotoUrl().toString()).into(imgUserProfile);
 
             }
 

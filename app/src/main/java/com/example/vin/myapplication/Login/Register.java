@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.vin.myapplication.MainMenu;
 import com.example.vin.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -85,6 +86,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, REQUESCODE);
     }
+
+
 
 
     @Override
@@ -170,64 +173,63 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     private void updateUserInfo(final String username, final String email , Uri pickedImgUri, final FirebaseUser currentUser) {
 
-        // first we need to upload user photo to firebase storage and get url
+            // first we need to upload user photo to firebase storage and get url
 
-        StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
-        final StorageReference imageFilePath = mStorage.child(pickedImgUri.getLastPathSegment());
-        imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
+            final StorageReference imageFilePath = mStorage.child(pickedImgUri.getLastPathSegment());
+            imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                // image uploaded succesfully
-                // now we can get our image url
-                User user = new User(username, email,imageFilePath.getDownloadUrl().toString());
+                    // image uploaded succesfully
+                    // now we can get our image url
+                    User user = new User(username, email,imageFilePath.getDownloadUrl().toString());
 
-                FirebaseDatabase.getInstance().getReference("Users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            finish();
-                            Intent intent = new Intent(Register.this, Login.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+                    FirebaseDatabase.getInstance().getReference("Users")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                finish();
+                                Intent intent = new Intent(Register.this, Login.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
+                    });
 
-                imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-
-
-                        UserProfileChangeRequest profleUpdate = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(username)
-                                .setPhotoUri(uri)
-                                .build();
+                    imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
 
 
-                        currentUser.updateProfile(profleUpdate)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                            UserProfileChangeRequest profleUpdate = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .setPhotoUri(uri)
+                                    .build();
 
-                                        if (task.isSuccessful()) {
-                                            // user info updated successfully
-                                            showMessage("Register Complete");
+
+                            currentUser.updateProfile(profleUpdate)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                            if (task.isSuccessful()) {
+                                                // user info updated successfully
+                                                showMessage("Register Complete");
+                                            }
 
                                         }
+                                    });
 
-                                    }
-                                });
-
-                    }
-                });
+                        }
+                    });
 
 
-            }
-        });
+                }
+            });
 
 
     }
