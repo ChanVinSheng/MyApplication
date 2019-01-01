@@ -276,7 +276,7 @@ public class Report extends Fragment implements
             fo.write(bytes.toByteArray());
             MediaScannerConnection.scanFile(getActivity(),
                     new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
+                    new String[]{"image/*"}, null);
             fo.close();
             Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
 
