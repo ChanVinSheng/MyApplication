@@ -25,9 +25,9 @@
 
     <item android:title="">
         <item
-            android:id="@+id/nav_about_us"
+            android:id="@+id/nav_app_info"
             android:icon="@drawable/ic_about_us"
-            android:title="About Us" />
+            android:title="App Info" />
 
             <item
                 android:id="@+id/nav_logout"

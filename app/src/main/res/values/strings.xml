@@ -25,5 +25,6 @@
     <string name="invalid_lat_long_used">Invalid coordinates used</string>
     <string name="no_address_found">No address found</string>
     <string name="send">send</string>
+    <string name="info_app">This app is assignment for TARC 2018 Mobile Application RSD2G2 Create by ChanVinSheng , ChongKarShun,LowEeHui, LeekHonLun, and NgChueanChen</string>
 </resources>
 

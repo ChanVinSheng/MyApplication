@@ -161,6 +161,8 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_report:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Report()).commit();
                 navigationView.setCheckedItem(R.id.nav_report);
+            case R.id.nav_app_info:
+                startActivity(new Intent(this, AppInfo.class));
 
         }
         drawer.closeDrawer(GravityCompat.START);

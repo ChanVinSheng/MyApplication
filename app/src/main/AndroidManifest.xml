@@ -41,17 +41,15 @@
 
         <activity
             android:name=".MAP.MapsActivity"
-            android:label="@string/title_activity_maps">
-
-        </activity>
-        <activity android:name=".FixLocation.FixMap">
-
-        </activity>
+            android:label="@string/title_activity_maps"></activity>
+        <activity android:name=".FixLocation.FixMap"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <activity android:name=".AppInfo"
+            android:parentActivityName=".MainMenu"></activity>
     </application>
 
 </manifest>
