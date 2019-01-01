@@ -57,10 +57,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         mAuth = FirebaseAuth.getInstance();
         txtusername = findViewById(R.id.txtRegisterUsername);
-        txtemail= findViewById(R.id.txtRegisterEmail);
+        txtemail = findViewById(R.id.txtRegisterEmail);
         txtpassword = findViewById(R.id.txtRegisterPassword);
-        txtconfirmedPassword= findViewById(R.id.txtRegisterConPassword);
-        buttonRegister  = findViewById(R.id.btnRegisterRegister);
+        txtconfirmedPassword = findViewById(R.id.txtRegisterConPassword);
+        buttonRegister = findViewById(R.id.btnRegisterRegister);
         progressBar = findViewById(R.id.registerProgressBar);
         buttonRegister.setOnClickListener(this);
         ImguserPhoto = findViewById(R.id.Regiter_image);
@@ -68,10 +68,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         ImguserPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 21){
+                if (Build.VERSION.SDK_INT >= 21) {
                     checkAndRequestForPermission();
-                }
-                else{
+                } else {
                     openGallery();
                 }
             }
@@ -84,7 +83,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent,REQUESCODE);
+        startActivityForResult(galleryIntent, REQUESCODE);
     }
 
 
@@ -92,12 +91,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK && requestCode == REQUESCODE && data != null){
+        if (resultCode == RESULT_OK && requestCode == REQUESCODE && data != null) {
             pickUrlImage = data.getData();
             ImguserPhoto.setImageURI(pickUrlImage);
         }
     }
-
 
 
     private void checkAndRequestForPermission() {
@@ -107,19 +105,15 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(Register.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-                Toast.makeText(Register.this,"Please accept for required permission",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Register.this, "Please accept for required permission", Toast.LENGTH_SHORT).show();
 
-            }
-
-            else
-            {
+            } else {
                 ActivityCompat.requestPermissions(Register.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         PReqCode);
             }
 
-        }
-        else
+        } else
             openGallery();
 
     }
@@ -129,53 +123,47 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         final String username = txtusername.getText().toString().trim();
         final String password = txtpassword.getText().toString().trim();
 
-        boolean fieldsOK = validate(new EditText[] { txtusername, txtemail, txtpassword,txtconfirmedPassword });
-        if(fieldsOK){
-            if(!isValidEmail(txtemail.getText().toString().trim())){
+        boolean fieldsOK = validate(new EditText[]{txtusername, txtemail, txtpassword, txtconfirmedPassword});
+        if (fieldsOK) {
+            if (!isValidEmail(txtemail.getText().toString().trim())) {
                 txtemail.setError("Invalid Email");
                 txtemail.setText("");
                 txtemail.requestFocus();
-            }
-            else if(!txtconfirmedPassword.getText().toString().trim().equals(txtpassword.getText().toString().trim())){
+            } else if (!txtconfirmedPassword.getText().toString().trim().equals(txtpassword.getText().toString().trim())) {
 
                 txtconfirmedPassword.setError("Password Not same");
                 txtconfirmedPassword.setText("");
                 txtconfirmedPassword.requestFocus();
-            }
-            else if(txtpassword.getText().toString().length() < 6){
+            } else if (txtpassword.getText().toString().length() < 6) {
                 txtpassword.setError("Minimum length of password should be 6 ");
                 txtpassword.setText("");
                 txtpassword.requestFocus();
                 txtconfirmedPassword.setText("");
 
-            }
-            else{
+            } else {
                 progressBar.setVisibility(View.VISIBLE);
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
-                                if(task.isSuccessful()){
+                                if (task.isSuccessful()) {
 
-                                    updateUserInfo(username,email,pickUrlImage,mAuth.getCurrentUser());
+                                    updateUserInfo();
 
-                                }else{
-                                    if(task.getException() instanceof FirebaseAuthUserCollisionException){
+                                } else {
+                                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                         Toast.makeText(Register.this, "This email already exist", Toast.LENGTH_LONG).show();
-                                    }else{
+                                    } else {
                                         Toast.makeText(Register.this, "Register fail... please try again", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
                         });
             }
+        } else {
+            Toast.makeText(Register.this, "Text Box is empty", Toast.LENGTH_LONG).show();
         }
-        else{
-                Toast.makeText(Register.this, "Text Box is empty", Toast.LENGTH_LONG).show();
-        }
-
-
 
 
     }
@@ -192,16 +180,16 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                 // image uploaded succesfully
                 // now we can get our image url
-                User user = new User(username , email , imageFilePath.getDownloadUrl().toString());
+                User user = new User(username, email,imageFilePath.getDownloadUrl().toString());
 
                 FirebaseDatabase.getInstance().getReference("Users")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             finish();
-                            Intent intent = new Intent(Register.this , Login.class);
+                            Intent intent = new Intent(Register.this, Login.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
@@ -209,14 +197,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     }
                 });
 
-
                 imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
 
 
                         UserProfileChangeRequest profleUpdate = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(username)
+                                .setDisplayName(name)
                                 .setPhotoUri(uri)
                                 .build();
 
@@ -239,36 +226,29 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 });
 
 
-
-
-
             }
         });
-
-
-
-
 
 
     }
 
     private void showMessage(String message) {
 
-        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 
     }
 
 
-    public void onClick(View view){
-        if(view == buttonRegister){
+    public void onClick(View view) {
+        if (view == buttonRegister) {
             registerUser();
         }
     }
 
-    private boolean validate(EditText[] fields){
-        for(int i = 0; i < fields.length; i++){
+    private boolean validate(EditText[] fields) {
+        for (int i = 0; i < fields.length; i++) {
             EditText currentField = fields[i];
-            if(currentField.getText().toString().length() <= 0){
+            if (currentField.getText().toString().length() <= 0) {
                 return false;
             }
         }
@@ -278,7 +258,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
-
 
 
 }
