@@ -2,7 +2,6 @@ package com.example.vin.myapplication;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +20,6 @@ import com.example.vin.myapplication.Login.Login;
 import com.example.vin.myapplication.Report.Report;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -100,55 +98,21 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
-
-        mDatabaseUser_image.addChildEventListener((new ChildEventListener() {
+        mDatabaseUser_image.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 FirebaseUser url = mAuth.getCurrentUser();
                 if(url.getPhotoUrl() != null){
                     Glide.with(navigationView).load(url.getPhotoUrl().toString()).into(imgUserProfile);
                 }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUser url = mAuth.getCurrentUser();
-                if(url.getPhotoUrl() != null){
-                    Glide.with(navigationView).load(url.getPhotoUrl().toString()).into(imgUserProfile);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        }));
-//        mDatabaseUser_image.addValueEventListener(new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                FirebaseUser url = mAuth.getCurrentUser();
-//                if(url.getPhotoUrl() != null){
-//                    Glide.with(navigationView).load(url.getPhotoUrl().toString()).into(imgUserProfile);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        });
 
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Report()).commit();

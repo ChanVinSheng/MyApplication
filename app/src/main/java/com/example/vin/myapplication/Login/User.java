@@ -1,7 +1,7 @@
 package com.example.vin.myapplication.Login;
 
 public class User {
-    private String username , email , password,imageURL;
+    public String username , email , password,imageURL;
 
     public String getImageURL() {
         return imageURL;
