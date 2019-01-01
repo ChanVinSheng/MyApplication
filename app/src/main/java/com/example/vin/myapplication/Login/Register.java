@@ -149,7 +149,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
 
-                                    updateUserInfo();
+                                    updateUserInfo(username,email,pickUrlImage,mAuth.getCurrentUser());
 
                                 } else {
                                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
@@ -203,7 +203,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
 
                         UserProfileChangeRequest profleUpdate = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(name)
+                                .setDisplayName(username)
                                 .setPhotoUri(uri)
                                 .build();
 
