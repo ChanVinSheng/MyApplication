@@ -1,7 +1,15 @@
 package com.example.vin.myapplication.Login;
 
 public class User {
-    private String username , email , password;
+    private String username , email , password,imageURL;
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
     public User(){
 
@@ -31,9 +39,9 @@ public class User {
         this.password = password;
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String imageURL) {
         this.username = username;
         this.email = email;
-        this.password = password;
+        this.imageURL = imageURL;
     }
 }

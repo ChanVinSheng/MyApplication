@@ -21,11 +21,18 @@ import android.widget.Toast;
 
 import com.example.vin.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
@@ -37,7 +44,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     EditText txtconfirmedPassword;
     ImageView ImguserPhoto;
     static int PReqCode = 1;
-    static int REQUESTCODE = 1;
+    static int REQUESCODE = 1;
     Uri pickUrlImage;
     ProgressBar progressBar;
 
@@ -61,7 +68,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         ImguserPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= 22){
+                if(Build.VERSION.SDK_INT >= 21){
                     checkAndRequestForPermission();
                 }
                 else{
@@ -74,31 +81,47 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     private void openGallery() {
 
+
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent,REQUESTCODE);
-
+        startActivityForResult(galleryIntent,REQUESCODE);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK && requestCode == REQUESTCODE && data != null){
+        if(resultCode == RESULT_OK && requestCode == REQUESCODE && data != null){
             pickUrlImage = data.getData();
             ImguserPhoto.setImageURI(pickUrlImage);
         }
     }
 
+
+
     private void checkAndRequestForPermission() {
-        if (ContextCompat.checkSelfPermission(Register.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(Register.this , Manifest.permission.READ_EXTERNAL_STORAGE)){
+
+
+        if (ContextCompat.checkSelfPermission(Register.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(Register.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
                 Toast.makeText(Register.this,"Please accept for required permission",Toast.LENGTH_SHORT).show();
 
-            }else
-                ActivityCompat.requestPermissions(Register.this , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},PReqCode);
+            }
+
+            else
+            {
+                ActivityCompat.requestPermissions(Register.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PReqCode);
+            }
 
         }
+        else
+            openGallery();
+
     }
 
     public void registerUser() {
@@ -134,22 +157,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if(task.isSuccessful()){
-                                    User user = new User(username , email, password);
 
-                                    FirebaseDatabase.getInstance().getReference("Users")
-                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
-                                                finish();
-                                                Intent intent = new Intent(Register.this , Login.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                startActivity(intent);
-                                                Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
+                                    updateUserInfo(username,email,pickUrlImage,mAuth.getCurrentUser());
+
                                 }else{
                                     if(task.getException() instanceof FirebaseAuthUserCollisionException){
                                         Toast.makeText(Register.this, "This email already exist", Toast.LENGTH_LONG).show();
@@ -166,7 +176,88 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         }
 
 
+
+
     }
+
+    private void updateUserInfo(final String username, final String email , Uri pickedImgUri, final FirebaseUser currentUser) {
+
+        // first we need to upload user photo to firebase storage and get url
+
+        StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
+        final StorageReference imageFilePath = mStorage.child(pickedImgUri.getLastPathSegment());
+        imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                // image uploaded succesfully
+                // now we can get our image url
+                User user = new User(username , email , imageFilePath.getDownloadUrl().toString());
+
+                FirebaseDatabase.getInstance().getReference("Users")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            finish();
+                            Intent intent = new Intent(Register.this , Login.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+
+                imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+
+                        UserProfileChangeRequest profleUpdate = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(username)
+                                .setPhotoUri(uri)
+                                .build();
+
+
+                        currentUser.updateProfile(profleUpdate)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        if (task.isSuccessful()) {
+                                            // user info updated successfully
+                                            showMessage("Register Complete");
+
+                                        }
+
+                                    }
+                                });
+
+                    }
+                });
+
+
+
+
+
+            }
+        });
+
+
+
+
+
+
+    }
+
+    private void showMessage(String message) {
+
+        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+
+    }
+
 
     public void onClick(View view){
         if(view == buttonRegister){
