@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -171,39 +172,46 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     }
 
+
+
     private void updateUserInfo(final String username, final String email , Uri pickedImgUri, final FirebaseUser currentUser) {
 
             // first we need to upload user photo to firebase storage and get url
 
             StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
-            final StorageReference imageFilePath = mStorage.child(pickedImgUri.getLastPathSegment());
-            imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+        final StorageReference imageFilePath = mStorage.child(pickedImgUri.getLastPathSegment());
+
+        imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                     // image uploaded succesfully
                     // now we can get our image url
-                    User user = new User(username, email,imageFilePath.getDownloadUrl().toString());
-
-                    FirebaseDatabase.getInstance().getReference("Users")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                finish();
-                                Intent intent = new Intent(Register.this, Login.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
 
                     imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
 
+                            User user = new User(username, email,uri.toString());
+
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+
+                                        Log.d("PICTURECHECK" , imageFilePath.getDownloadUrl().toString());
+
+                                        finish();
+                                        Intent intent = new Intent(Register.this, Login.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                        Toast.makeText(Register.this, "Register Successfully", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
 
                             UserProfileChangeRequest profleUpdate = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(username)
