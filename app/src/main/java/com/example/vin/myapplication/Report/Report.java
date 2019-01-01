@@ -100,6 +100,7 @@ public class Report extends Fragment implements
     private boolean mTrackingLocation;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
+    Uri contentURI;
 
 
     @Override
@@ -237,7 +238,7 @@ public class Report extends Fragment implements
         }
         if (requestCode == GALLERY) {
             if (data != null) {
-                Uri contentURI = data.getData();
+                contentURI = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), contentURI);
                     String path = saveImage(bitmap);
