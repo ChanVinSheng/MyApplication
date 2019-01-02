@@ -44,9 +44,9 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder,final int i) {
         myViewHolder.date.setText(reports.get(i).getDate());
-        myViewHolder.location.setText(reports.get(i).getLocation());
+        //myViewHolder.location.setText(reports.get(i).getLocation());
         myViewHolder.title.setText(reports.get(i).getTitle());
-        myViewHolder.description.setText(reports.get(i).getDescription());
+        //myViewHolder.description.setText(reports.get(i).getDescription());
         Picasso.get().load(reports.get(i).getmImageUrl()).into(myViewHolder.imageView1);
 
         myViewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
@@ -86,9 +86,9 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.MyViewHolder> {
         public MyViewHolder( View itemView) {
             super(itemView);
             date = (TextView)itemView.findViewById(R.id.rDate);
-            location = (TextView) itemView.findViewById(R.id.aLocation);
+            //location = (TextView) itemView.findViewById(R.id.aLocation);
             title = (TextView) itemView.findViewById(R.id.rTitle);
-            description = (TextView) itemView.findViewById(R.id.rDescription);
+            //description = (TextView) itemView.findViewById(R.id.rDescription);
             imageView1 = (CircleImageView) itemView.findViewById(R.id.image1);
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }

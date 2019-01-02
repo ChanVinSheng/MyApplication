@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.vin.myapplication.Announcement.AnnouncementList;
+import com.example.vin.myapplication.FixLocation.FixedLocationRecycle;
 import com.example.vin.myapplication.Login.Login;
 import com.example.vin.myapplication.Report.Report;
 import com.google.firebase.auth.FirebaseAuth;
@@ -164,6 +165,10 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_report:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Report()).commit();
                 navigationView.setCheckedItem(R.id.nav_report);
+                break;
+            case R.id.nav_places:
+                startActivity(new Intent(this,FixedLocationRecycle.class));
+                break;
             case R.id.nav_app_info:
                 startActivity(new Intent(this, AppInfo.class));
 

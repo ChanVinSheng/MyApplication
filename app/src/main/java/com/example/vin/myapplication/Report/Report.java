@@ -269,6 +269,7 @@ public class Report extends Fragment implements
             imageview.setImageBitmap(thumbnail);
             saveImage(thumbnail);
             Toast.makeText(getActivity(), "Image Saved!", Toast.LENGTH_SHORT).show();
+            contentURI = contentURI.parse(thumbnail.toString());
         }
     }
 

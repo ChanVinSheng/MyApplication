@@ -20,29 +20,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:id="@+id/aLocation"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
             android:textSize="15sp"
             android:id="@+id/rTitle"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:id="@+id/rDescription"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image1"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:id="@+id/image1"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher" />
     </LinearLayout>
 </LinearLayout>

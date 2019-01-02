@@ -52,7 +52,8 @@
             android:name=".AppInfo"
             android:parentActivityName=".MainMenu" />
         <activity android:name=".Announcement.AnnouncementList" />
-        <activity android:name=".Announcement.AnnouncementDetail"></activity>
+        <activity android:name=".Announcement.AnnouncementDetail" />
+        <activity android:name=".FixLocation.FixedLocationRecycle"></activity>
     </application>
 
 </manifest>
