@@ -173,7 +173,7 @@ public class MainMenu extends AppCompatActivity implements NavigationView.OnNavi
             case R.id.nav_places:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Place()).commit();
                 navigationView.setCheckedItem(R.id.nav_places);
-
+//a
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
